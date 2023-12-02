@@ -54,7 +54,7 @@ public static class Day1
             }
 
             string last = string.Empty;
-            for (int i = line.Length - 1; i > 0; i--)
+            for (int i = line.Length - 1; i >= 0; i--)
             {
                 char c = line[i];
                 if (c == '0' || c == '1' || c == '2' || c == '3'
