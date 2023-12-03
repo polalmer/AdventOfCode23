@@ -10,23 +10,29 @@ public partial class Day2
 
     public void Part1()
     {
-        string[] input = ["Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green", "Game 2: 1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue", "Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red", "Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red", "Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green"];
+        //string[] input = ["Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green", "Game 2: 1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue", "Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red", "Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red", "Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green"];
+        string[] input = FileReader.ReadFile(@"\Day2\Part1.txt");
 
-        int gameCount = 0;
         int result = 0;
         foreach (string line in input)
         {
-            gameCount++;
+            int gameCount = GetCount(line, GameRegex());
+            Console.Write($"\nGame:{gameCount}\n");
+
             int blues = GetCount(line, BlueRegex());
+            Console.Write($"Blues:{blues}\n");
             if (blues > loadedBlues) continue;
 
             int reds = GetCount(line, RedRegex());
+            Console.Write($"Reds:{reds}\n");
             if (reds > loadedReds) continue;
 
             int greens = GetCount(line, GreenRegex());
+            Console.Write($"Greens:{greens}\n");
             if (greens > loadedGreens) continue;
 
             result += gameCount;
+            Console.Write("added Game!\n");
         }
         Console.WriteLine(result);
     }
@@ -37,10 +43,13 @@ public partial class Day2
         int count = 0;
         foreach (Match match in collection.Cast<Match>())
         {
-            count = Convert.ToInt32(match.Value);
+            count += Convert.ToInt32(match.Value);
         }
         return count;
     }
+
+    [GeneratedRegex(@"(\d)+(?=:)")]
+    private static partial Regex GameRegex();
 
     [GeneratedRegex(@"(\d)+(?= blue)")]
     private static partial Regex BlueRegex();
