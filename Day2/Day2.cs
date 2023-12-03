@@ -1,0 +1,53 @@
+using System.Text.RegularExpressions;
+
+namespace AdventOfCode23;
+
+public partial class Day2
+{
+    private const int loadedReds = 12;
+    private const int loadedGreens = 13;
+    private const int loadedBlues = 14;
+
+    public void Part1()
+    {
+        string[] input = ["Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green", "Game 2: 1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue", "Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red", "Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red", "Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green"];
+
+        int gameCount = 0;
+        int result = 0;
+        foreach (string line in input)
+        {
+            gameCount++;
+            int blues = GetCount(line, BlueRegex());
+            if (blues > loadedBlues) continue;
+
+            int reds = GetCount(line, RedRegex());
+            if (reds > loadedReds) continue;
+
+            int greens = GetCount(line, GreenRegex());
+            if (greens > loadedGreens) continue;
+
+            result += gameCount;
+        }
+        Console.WriteLine(result);
+    }
+
+    private int GetCount(string line, Regex rx)
+    {
+        MatchCollection collection = rx.Matches(line);
+        int count = 0;
+        foreach (Match match in collection.Cast<Match>())
+        {
+            count = Convert.ToInt32(match.Value);
+        }
+        return count;
+    }
+
+    [GeneratedRegex(@"(\d)+(?= blue)")]
+    private static partial Regex BlueRegex();
+
+    [GeneratedRegex(@"(\d)+(?= red)")]
+    private static partial Regex RedRegex();
+
+    [GeneratedRegex(@"(\d)+(?= green)")]
+    private static partial Regex GreenRegex();
+}

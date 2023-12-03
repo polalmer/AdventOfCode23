@@ -1,3 +1,4 @@
 ﻿using AdventOfCode23;
 
-Day1.Part2();
+var day = new Day2();
+day.Part1();
