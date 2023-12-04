@@ -20,8 +20,8 @@ public partial class Day2
             Console.Write($"\nGame:{gameCount}\n");
 
             bool toMany = false;
-            MatchCollection games = DivideRegex().Matches(line +';');
-            foreach(Match game in games)
+            MatchCollection games = DivideRegex().Matches(line + ';');
+            foreach (Match game in games)
             {
                 int blues = GetCount(game.Value, BlueRegex());
                 Console.Write($"Blues:{blues}\n");
@@ -54,6 +54,42 @@ public partial class Day2
             Console.Write("added Game!\n");
         }
         Console.WriteLine(result);
+    }
+
+    public void Part2()
+    {
+        //string[] input = ["Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green", "Game 2: 1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue", "Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red", "Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red", "Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green"];
+        string[] input = FileReader.ReadFile(@"\Day2\Part1.txt");
+
+        int powers = 0;
+        foreach (string line in input)
+        {
+            int redMax = 0;
+            int greenMax = 0;
+            int blueMax = 0;
+
+            int gameCount = GetCount(line, GameRegex());
+            Console.Write($"\nGame:{gameCount}\n");
+
+            MatchCollection games = DivideRegex().Matches(line + ';');
+            foreach (Match game in games)
+            {
+                int blues = GetCount(game.Value, BlueRegex());
+                Console.Write($"Blues:{blues}\n");
+                if (blues > blueMax) blueMax = blues;
+
+                int reds = GetCount(game.Value, RedRegex());
+                Console.Write($"Reds:{reds}\n");
+                if (reds > redMax) redMax = reds;
+
+                int greens = GetCount(game.Value, GreenRegex());
+                Console.Write($"Greens:{greens}\n");
+                if (greens > greenMax) greenMax = greens;
+            }
+
+            powers += redMax * greenMax * blueMax;
+        }
+        Console.Write($"Power:{powers}");
     }
 
     private int GetCount(string line, Regex rx)
