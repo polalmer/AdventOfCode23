@@ -19,17 +19,36 @@ public partial class Day2
             int gameCount = GetCount(line, GameRegex());
             Console.Write($"\nGame:{gameCount}\n");
 
-            int blues = GetCount(line, BlueRegex());
-            Console.Write($"Blues:{blues}\n");
-            if (blues > loadedBlues) continue;
+            bool toMany = false;
+            MatchCollection games = DivideRegex().Matches(line +';');
+            foreach(Match game in games)
+            {
+                int blues = GetCount(game.Value, BlueRegex());
+                Console.Write($"Blues:{blues}\n");
+                if (blues > loadedBlues)
+                {
+                    toMany = true;
+                    break;
+                }
 
-            int reds = GetCount(line, RedRegex());
-            Console.Write($"Reds:{reds}\n");
-            if (reds > loadedReds) continue;
+                int reds = GetCount(game.Value, RedRegex());
+                Console.Write($"Reds:{reds}\n");
+                if (reds > loadedReds)
+                {
+                    toMany = true;
+                    break;
+                }
 
-            int greens = GetCount(line, GreenRegex());
-            Console.Write($"Greens:{greens}\n");
-            if (greens > loadedGreens) continue;
+                int greens = GetCount(game.Value, GreenRegex());
+                Console.Write($"Greens:{greens}\n");
+                if (greens > loadedGreens)
+                {
+                    toMany = true;
+                    break;
+                }
+            }
+
+            if (toMany) continue;
 
             result += gameCount;
             Console.Write("added Game!\n");
@@ -59,4 +78,7 @@ public partial class Day2
 
     [GeneratedRegex(@"(\d)+(?= green)")]
     private static partial Regex GreenRegex();
+
+    [GeneratedRegex(@"(.*?);")]
+    private static partial Regex DivideRegex();
 }
