@@ -32,8 +32,9 @@ public partial class Day4
     public void Part2()
     {
         List<Card> cards = [new(input[0])];
-        int cardIndex = 1;
-        while (cards.Count > 0)
+        int totalWonCards = 1;
+        int cardIndex = 0;
+        while (cards.FirstOrDefault() is not null)
         {
             string card = cards.First().copys.First();
             int colon = card.IndexOf(':');
@@ -45,24 +46,28 @@ public partial class Day4
             int cardsWon = 0;
             foreach (int number in ownNumbers)
             {
-                if (winningNumbers.Contains(number)) cardsWon++;
+                if (winningNumbers.Contains(number))
+                {
+                    cardsWon++;
+                    totalWonCards++;
+                }
             }
 
             //add won cards
-            for (int i = 1; i <= cardsWon; i++)
+            for (int i = 1; i < cardsWon; i++)
             {
-                if (cards.Count < i)
-                {
-                    cards.Add(new(input[i + cardsWon]));
-                }
-                else
+                try
                 {
                     cards[i].copys.Add(input[i + cardsWon]);
+                }
+                catch
+                {
+                    cards.Add(new(input[i + cardIndex]));
                 }
             }
 
             //Remove cards
-            if (cards.First().copys.Count == 0)
+            if (cards.First().copys.Count == 1)
             {
                 cards.RemoveAt(0);
                 cardIndex++;
@@ -71,8 +76,9 @@ public partial class Day4
             {
                 cards.First().copys.RemoveAt(0);
             }
+            Console.Write($"Won {cardsWon} this round \n");
         }
-        Console.Write(cardIndex);
+        Console.Write("Result: "+ totalWonCards);
     }
 
     List<int> GetNumbers(string text)
