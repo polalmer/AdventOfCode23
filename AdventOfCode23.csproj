@@ -14,7 +14,20 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="bin\**" />
+    <Compile Remove="obj\**" />
+    <Content Remove="bin\**" />
+    <Content Remove="obj\**" />
+    <EmbeddedResource Remove="bin\**" />
+    <EmbeddedResource Remove="obj\**" />
+    <None Remove="bin\**" />
+    <None Remove="obj\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="day4\Puzzle.txt" />
+    <None Remove="day5\Puzzle.txt" />
+    <None Remove="day5\Test.txt" />
   </ItemGroup>
 
 </Project>
