@@ -14,7 +14,7 @@ public partial class Day4
             int colon = card.IndexOf(':');
             int split = card.IndexOf('|');
 
-            List<int> winningNumbers = GetNumbers(card.Substring(colon, split));
+            List<int> winningNumbers = GetNumbers(card[colon..split]);
             List<int> ownNumbers = GetNumbers(card[split..]);
 
             int winners = 0;
@@ -36,7 +36,7 @@ public partial class Day4
         int cardIndex = 0;
         while (cards.FirstOrDefault() is not null)
         {
-            string card = cards.First().copys.First();
+            string card = cards.First().card;
             int colon = card.IndexOf(':');
             int split = card.IndexOf('|');
 
@@ -49,33 +49,25 @@ public partial class Day4
                 if (winningNumbers.Contains(number))
                 {
                     cardsWon++;
-                    totalWonCards++;
                 }
             }
 
-            if (cardsWon == 0)
+            if (cardsWon > 0)
             {
-                cards.RemoveAt(0);
-                cardIndex++;
-                continue;
+                //add won cards
+                for (int i = 1; i <= cardsWon; i++)
+                {
+                    cards[i].Count += cards[0].Count;
+                    
+                }
             }
 
-            //add won cards
-            for (int i = 1; i <= cardsWon; i++)
-            {
-                cards[i].copys.Add(cards[i].copys.First());
-            }
+            totalWonCards += cardsWon * cards[0].Count;
 
             //Remove cards
-            if (cards.First().copys.Count == 1)
-            {
-                cards.RemoveAt(0);
-                cardIndex++;
-            }
-            else
-            {
-                cards.First().copys.RemoveAt(0);
-            }
+            cards.RemoveAt(0);
+            cardIndex++;
+
             Console.Write($"Won {cardsWon} this round \n");
         }
         Console.Write("Result: " + totalWonCards);
@@ -88,9 +80,10 @@ public partial class Day4
     }
 
 
-    class Card(string firstCard)
+    class Card(string card)
     {
-        public List<string> copys = [firstCard];
+        public string card = card;
+        public int Count = 1;
     }
 
     [GeneratedRegex(@"(\d)+")]
