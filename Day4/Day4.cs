@@ -9,6 +9,7 @@ public partial class Day4
 
     public void Part1()
     {
+        int total = 0;
         foreach (string card in input)
         {
             int colon = card.IndexOf(':');
@@ -23,10 +24,13 @@ public partial class Day4
                 if (winningNumbers.Contains(number))
                 {
                     Console.Write(number + "\n");
+                    winners++;
                 }
             }
+            total += (int)Math.Pow(2, winners - 1);
             Console.WriteLine();
         }
+        Console.WriteLine(total);
     }
 
     public void Part2()
