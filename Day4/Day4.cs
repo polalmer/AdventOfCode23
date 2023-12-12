@@ -5,7 +5,7 @@ namespace AdventOfCode23;
 public partial class Day4
 {
     //string[] input = ["Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53"];
-    readonly string[] input = FileReader.ReadFile(@"\Day4\Test1.txt");
+    readonly string[] input = FileReader.ReadFile(@"\Day4\Puzzle.txt");
 
     public void Part1()
     {
@@ -31,8 +31,8 @@ public partial class Day4
 
     public void Part2()
     {
-        List<Card> cards = [new(input[0])];
-        int totalWonCards = 1;
+        List<Card> cards = input.Select(l => new Card(l)).ToList();
+        int totalWonCards = cards.Count;
         int cardIndex = 0;
         while (cards.FirstOrDefault() is not null)
         {
@@ -40,7 +40,7 @@ public partial class Day4
             int colon = card.IndexOf(':');
             int split = card.IndexOf('|');
 
-            List<int> winningNumbers = GetNumbers(card.Substring(colon, split));
+            List<int> winningNumbers = GetNumbers(card[colon..split]);
             List<int> ownNumbers = GetNumbers(card[split..]);
 
             int cardsWon = 0;
@@ -53,17 +53,17 @@ public partial class Day4
                 }
             }
 
-            //add won cards
-            for (int i = 1; i < cardsWon; i++)
+            if (cardsWon == 0)
             {
-                try
-                {
-                    cards[i].copys.Add(input[i + cardsWon]);
-                }
-                catch
-                {
-                    cards.Add(new(input[i + cardIndex]));
-                }
+                cards.RemoveAt(0);
+                cardIndex++;
+                continue;
+            }
+
+            //add won cards
+            for (int i = 1; i <= cardsWon; i++)
+            {
+                cards[i].copys.Add(cards[i].copys.First());
             }
 
             //Remove cards
@@ -78,7 +78,7 @@ public partial class Day4
             }
             Console.Write($"Won {cardsWon} this round \n");
         }
-        Console.Write("Result: "+ totalWonCards);
+        Console.Write("Result: " + totalWonCards);
     }
 
     List<int> GetNumbers(string text)
