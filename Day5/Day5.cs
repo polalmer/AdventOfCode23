@@ -4,15 +4,30 @@ namespace AdventOfCode23;
 
 public partial class Day5
 {
-    readonly string[] input = FileReader.ReadFile(@"\Day5\Test.txt");
+    readonly string[] input = FileReader.ReadFile(@"\Day5\Puzzle.txt");
+    List<Map> maps = [];
 
     public void Part1()
     {
         string[] initialSeeds = InitalSeeds().Matches(input[0]).Select(m => m.ToString()).ToArray();
-        List<Map> maps = GetAllMaps();
+        maps = GetAllMaps();
         maps.ForEach(map => map.FillDictionary());
 
-        Console.WriteLine();
+        int? lowestLocation = null;
+        foreach(string seed in initialSeeds)
+        {
+            int loc = GetLocationValue(Convert.ToInt32(seed));
+            if (lowestLocation is null)
+            {
+                lowestLocation = loc;
+            }
+            else if(lowestLocation > loc)
+            {
+                lowestLocation = loc;
+            }
+            Console.WriteLine(loc);
+        }
+        Console.WriteLine("\n"+lowestLocation);
     }
 
     class Map((string from, string to) categories)
@@ -71,6 +86,18 @@ public partial class Day5
     {
         Match match = Categories().Matches(line).First();
         return (match.Groups[1].ToString(), match.Groups[2].ToString());
+    }
+
+    private int GetLocationValue(int key)
+    {
+        foreach(Map map in maps)
+        {
+            if (map.MappedValues.TryGetValue(key, out int value))
+            {
+                key = value;
+            }
+        }
+        return key;
     }
 
     [GeneratedRegex(@"(\d)+")]
