@@ -13,10 +13,10 @@ public partial class Day5
         maps = GetAllMaps();
         maps.ForEach(map => map.FillMappings());
 
-        int? lowestLocation = null;
+        long? lowestLocation = null;
         foreach(string seed in initialSeeds)
         {
-            int loc = GetLocationValue(Convert.ToInt32(seed));
+            long loc = GetLocationValue(Convert.ToInt64(seed));
             if (lowestLocation is null)
             {
                 lowestLocation = loc;
@@ -34,7 +34,7 @@ public partial class Day5
     {
         public List<string> text = [];
 
-        public List<(int from, int to, int maxMapped)> mappings = [];
+        public List<(long from, long to, long maxMapped)> mappings = [];
 
         public readonly string From = categories.from;
 
@@ -45,8 +45,8 @@ public partial class Day5
             foreach (string line in text)
             {
                 Match match = Mappings().Match(line);
-                (int destinationRangeStart, int sourceRangestart, int rangeLength) =
-                    (Convert.ToInt32(match.Groups[1].Value), Convert.ToInt32(match.Groups[2].Value), Convert.ToInt32(match.Groups[3].Value));
+                (long destinationRangeStart, long sourceRangestart, long rangeLength) =
+                    (Convert.ToInt64(match.Groups[1].Value), Convert.ToInt64(match.Groups[2].Value), Convert.ToInt64(match.Groups[3].Value));
                 mappings.Add((sourceRangestart, destinationRangeStart, rangeLength));
             }
         }
@@ -78,7 +78,7 @@ public partial class Day5
         return (match.Groups[1].ToString(), match.Groups[2].ToString());
     }
 
-    private int GetLocationValue(int key)
+    private long GetLocationValue(long key)
     {
         foreach(Map map in maps)
         {
@@ -86,7 +86,7 @@ public partial class Day5
             {
                 if(key >= from &&  key < (from + maxMapped))
                 {
-                    int diff = key - from;
+                    long diff = key - from;
                     key = to + diff;
                     break;
                 }
