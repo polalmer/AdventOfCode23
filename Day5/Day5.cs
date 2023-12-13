@@ -8,9 +8,9 @@ public partial class Day5
 
     public void Part1()
     {
-        //Setup
         string[] initialSeeds = InitalSeeds().Matches(input[0]).Select(m => m.ToString()).ToArray();
         List<Map> maps = GetAllMaps();
+        maps.ForEach(map => map.FillDictionary());
 
         Console.WriteLine();
     }
@@ -19,9 +19,32 @@ public partial class Day5
     {
         public List<string> text = [];
 
+        /// <summary>
+        /// Key = From, Value = To
+        /// </summary>
+        public Dictionary<int,int> MappedValues = [];
+
         public readonly string From = categories.from;
 
         public readonly string To = categories.to;
+
+        public void FillDictionary()
+        {
+            foreach (string line in text)
+            {
+                Match match = Mappings().Match(line);
+                (int destinationRangeStart, int sourceRangestart, int rangeLength) =
+                    (Convert.ToInt32(match.Groups[1].Value), Convert.ToInt32(match.Groups[2].Value), Convert.ToInt32(match.Groups[3].Value));
+
+                while (rangeLength > 0)
+                {
+                    MappedValues.Add(sourceRangestart,destinationRangeStart);
+                    destinationRangeStart++;
+                    sourceRangestart++;
+                    rangeLength--;
+                }
+            }
+        }
     }
 
     private List<Map> GetAllMaps()
@@ -55,4 +78,7 @@ public partial class Day5
 
     [GeneratedRegex(@"(\w+)-to-(\w+)")]
     private static partial Regex Categories();
+
+    [GeneratedRegex(@"(\w+) (\w+) (\w+)")]
+    private static partial Regex Mappings();
 }
