@@ -11,7 +11,7 @@ public partial class Day5
     {
         string[] initialSeeds = InitalSeeds().Matches(input[0]).Select(m => m.ToString()).ToArray();
         maps = GetAllMaps();
-        maps.ForEach(map => map.FillDictionary());
+        maps.ForEach(map => map.FillMappings());
 
         int? lowestLocation = null;
         foreach(string seed in initialSeeds)
@@ -34,30 +34,20 @@ public partial class Day5
     {
         public List<string> text = [];
 
-        /// <summary>
-        /// Key = From, Value = To
-        /// </summary>
-        public Dictionary<int,int> MappedValues = [];
+        public List<(int from, int to, int maxMapped)> mappings = [];
 
         public readonly string From = categories.from;
 
         public readonly string To = categories.to;
 
-        public void FillDictionary()
+        public void FillMappings()
         {
             foreach (string line in text)
             {
                 Match match = Mappings().Match(line);
                 (int destinationRangeStart, int sourceRangestart, int rangeLength) =
                     (Convert.ToInt32(match.Groups[1].Value), Convert.ToInt32(match.Groups[2].Value), Convert.ToInt32(match.Groups[3].Value));
-
-                while (rangeLength > 0)
-                {
-                    MappedValues.Add(sourceRangestart,destinationRangeStart);
-                    destinationRangeStart++;
-                    sourceRangestart++;
-                    rangeLength--;
-                }
+                mappings.Add((sourceRangestart, destinationRangeStart, rangeLength));
             }
         }
     }
@@ -92,9 +82,14 @@ public partial class Day5
     {
         foreach(Map map in maps)
         {
-            if (map.MappedValues.TryGetValue(key, out int value))
+            foreach(var (from, to, maxMapped) in map.mappings)
             {
-                key = value;
+                if(key >= from &&  key < (from + maxMapped))
+                {
+                    int diff = key - from;
+                    key = to + diff;
+                    break;
+                }
             }
         }
         return key;
