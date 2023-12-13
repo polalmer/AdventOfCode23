@@ -14,20 +14,56 @@ public partial class Day5
         maps.ForEach(map => map.FillMappings());
 
         long? lowestLocation = null;
-        foreach(string seed in initialSeeds)
+        foreach (string seed in initialSeeds)
         {
             long loc = GetLocationValue(Convert.ToInt64(seed));
             if (lowestLocation is null)
             {
                 lowestLocation = loc;
             }
-            else if(lowestLocation > loc)
+            else if (lowestLocation > loc)
             {
                 lowestLocation = loc;
             }
             Console.WriteLine(loc);
         }
-        Console.WriteLine("\n"+lowestLocation);
+        Console.WriteLine("\n" + lowestLocation);
+    }
+
+    public void Part2()
+    {
+        string[] initialSeeds = InitalSeeds().Matches(input[0]).Select(m => m.ToString()).ToArray();
+        List<(long start, int range)> seeds = [];
+        for (int i = 0; i < initialSeeds.Length; i += 2)
+        {
+            seeds.Add((Convert.ToInt64(initialSeeds[i]), Convert.ToInt32(initialSeeds[i + 1])));
+        }
+        maps = GetAllMaps();
+        maps.ForEach(map => map.FillMappings());
+
+        List<long> checkedSeeds = [];
+        long? lowestLocation = null;
+        foreach (var (start, range) in seeds)
+        {
+            for (int i = 0; i < range; i++)
+            {
+                long seed = start + i;
+                if (checkedSeeds.Contains(seed)) continue;
+
+                checkedSeeds.Add(seed);
+                long loc = GetLocationValue(seed);
+                if (lowestLocation is null)
+                {
+                    lowestLocation = loc;
+                }
+                else if (lowestLocation > loc)
+                {
+                    lowestLocation = loc;
+                }
+                Console.WriteLine(loc);
+            }
+        }
+        Console.WriteLine("\n" + lowestLocation);
     }
 
     class Map((string from, string to) categories)
@@ -56,7 +92,7 @@ public partial class Day5
     {
         List<Map> maps = [];
         int index = 2;
-        while(index < input.Length)
+        while (index < input.Length)
         {
             Map map = new(GetGroupFromNameLine(input[index]));
             index++;
@@ -80,11 +116,11 @@ public partial class Day5
 
     private long GetLocationValue(long key)
     {
-        foreach(Map map in maps)
+        foreach (Map map in maps)
         {
-            foreach(var (from, to, maxMapped) in map.mappings)
+            foreach (var (from, to, maxMapped) in map.mappings)
             {
-                if(key >= from &&  key < (from + maxMapped))
+                if (key >= from && key < (from + maxMapped))
                 {
                     long diff = key - from;
                     key = to + diff;
