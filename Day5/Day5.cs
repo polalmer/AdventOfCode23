@@ -40,30 +40,32 @@ public partial class Day5
         }
         maps = GetAllMaps();
         maps.ForEach(map => map.FillMappings());
+        List<long> lowestLocation = [];
 
-        List<long> checkedSeeds = [];
+        Parallel.ForEach(seeds, seed => { lowestLocation.Add(FindSmallest(seed.start, seed.range)); });
+
+        Console.WriteLine("\n" + lowestLocation.Min());
+    }
+
+    private long FindSmallest(long start, int range)
+    {
         long? lowestLocation = null;
-        foreach (var (start, range) in seeds)
+        for (int i = 0; i < range; i++)
         {
-            for (int i = 0; i < range; i++)
-            {
-                long seed = start + i;
-                if (checkedSeeds.Contains(seed)) continue;
+            long seed = start + i;
 
-                checkedSeeds.Add(seed);
-                long loc = GetLocationValue(seed);
-                if (lowestLocation is null)
-                {
-                    lowestLocation = loc;
-                }
-                else if (lowestLocation > loc)
-                {
-                    lowestLocation = loc;
-                }
-                Console.WriteLine(loc);
+            long loc = GetLocationValue(seed);
+            if (lowestLocation is null)
+            {
+                lowestLocation = loc;
             }
+            else if (lowestLocation > loc)
+            {
+                lowestLocation = loc;
+            }
+            Console.WriteLine(loc);
         }
-        Console.WriteLine("\n" + lowestLocation);
+        return lowestLocation ?? throw new Exception();
     }
 
     class Map((string from, string to) categories)

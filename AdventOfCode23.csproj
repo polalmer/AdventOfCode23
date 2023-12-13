@@ -28,6 +28,7 @@
     <None Remove="day4\Puzzle.txt" />
     <None Remove="day5\Puzzle.txt" />
     <None Remove="day5\Test.txt" />
+    <None Remove="day6\Test.txt" />
   </ItemGroup>
 
 </Project>
