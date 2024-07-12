@@ -37,10 +37,10 @@ public class Day7
             foreach (var card in ordered)
             {
                 Cards += card;
-            }
+    }
             Console.WriteLine(Cards);
             return this;
-        }
+}
 
         public Game Score()
         {
@@ -49,7 +49,7 @@ public class Day7
         }
 
         private HandType GetHandType()
-        {
+{
             if (Cards.All(c => c == Cards[0])) return HandType.FiveOfaKind;
             if (Cards.Count(c => (c == Cards[0]) || (c == Cards[1])) == 4) return HandType.FourOfaKind;
             if (Cards.Count(c => (c == Cards[0]) || (c == Cards[1]) || (c == Cards[2])) == 3) return HandType.ThreeOfaKind;
@@ -57,7 +57,7 @@ public class Day7
             throw new NotImplementedException();
         }
     }
-}
+    }
 
 public enum HandType
 {
