@@ -54,7 +54,7 @@ public class Day7
             if (Cards.Count(c => (c == Cards[0]) || (c == Cards[1])) == 4) return HandType.FourOfaKind;
             if (Cards.Count(c => (c == Cards[0]) || (c == Cards[1]) || (c == Cards[2])) == 3) return HandType.ThreeOfaKind;
 
-
+            throw new NotImplementedException();
         }
     }
 }

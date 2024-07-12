@@ -1,4 +1,3 @@
-﻿using AdventOfCode23;
+﻿using AdventOfCode23.FunctionalTicTacToe;
 
-var day = new Day7();
-day.Part1();
+TicTacToe.Start();
